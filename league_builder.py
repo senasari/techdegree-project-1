@@ -4,7 +4,7 @@ import csv
 # this function gets the players' information from the cvs file and stores into the list called 'players'.
 def storing_players():
     with open('soccer_players.csv') as csvfile:
-        player_reader = csv.reader(csvfile, delimiter='|')
+        player_reader = csv.reader(csvfile, delimiter=',')
         rows = list(player_reader)
 
         field_names = ['name', 'height', 'experienced', 'guardian name(s)']
@@ -39,6 +39,29 @@ def writing_teams():
         teamsfile.write('Raptors'+"\n")
         for player in raptors:
             teamsfile.write(info_line(player)+"\n")
+
+
+# creating letter format for parents
+def letter_to_parent(player, filename):
+    # players = storing_players()
+    with open(filename,'a') as file:
+        file.write('Dear {},'.format(player['guardian name(s)'])+'\n')
+        file.write('{} is in team called {}.'.format(player['name'], team_of(player)))
+        file.write(' First practice will be on September 10 at 9 am.'+'\n')
+        file.write('Hope to see you soon!'+'\n')
+        file.write('Thank you,'+'\n')
+        file.write('Coordinator Sena')
+
+
+# shows the team of the player
+def team_of(player):
+    dragons, sharks, raptors = creating_teams()
+    if player in dragons:
+        return 'dragons'
+    elif player in sharks:
+        return 'sharks'
+    elif player in raptors:
+        return 'raptors'
 
 
 # this function divides the team into two based on experience
@@ -81,3 +104,10 @@ if __name__ == '__main__':
     dividing_teams()
     creating_teams()
     writing_teams()
+
+    # creating letters for each parent
+    players = storing_players()
+    for player in players:
+        player_name = player['name'].split(' ')
+        formatted_player_name = '_'.join(player_name).lower()
+        letter_to_parent(player, formatted_player_name + ".txt")
